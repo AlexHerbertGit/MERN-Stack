@@ -5,6 +5,7 @@ const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const { connectDB } = require('./db');
+const setupSwagger = require('./swagger');
 
 const authRoutes = require('./routes/authRoutes');
 const mealRoutes = require('./routes/mealRoutes');
@@ -39,3 +40,5 @@ const PORT = process.env.PORT || 4000;
 connectDB(process.env.MONGO_URI).then(() => {
     app.listen(PORT, () => console.log(`API listening on http://localhost:${PORT}`));
 });
+
+setupSwagger(app);

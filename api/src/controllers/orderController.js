@@ -7,42 +7,43 @@ const Order = require('../models/Order');
 
 // Beneficiary places an order (spend 1 token, decrement meal qty)
 async function placeOrder(req, res) {
-  const beneficiaryId = req.user.id;
-  const { mealId } = req.body;
-
-  const session = await mongoose.startSession();
   try {
-    await session.withTransaction(async () => {
-      const meal = await Meal.findById(mealId).session(session);
-      if (!meal) throw new Error('Meal not found');
-      if (meal.qtyAvailable <= 0) throw new Error('Meal unavailable');
+    const beneficiaryId = req.user.id;
+    const { mealId } = req.body;
 
-      const beneficiary = await User.findById(beneficiaryId).session(session);
-      if (!beneficiary || beneficiary.role !== 'beneficiary') throw new Error('Invalid beneficiary');
-      if (beneficiary.tokenBalance < 1) throw new Error('Insufficient tokens');
+    // 1) Decrement meal qty if > 0
+    const mealUpd = await Meal.updateOne(
+      { _id: mealId, qtyAvailable: { $gt: 0 } },
+      { $inc: { qtyAvailable: -1 } }
+    );
+    if (mealUpd.modifiedCount !== 1) {
+      return res.status(400).json({ error: 'Meal unavailable' });
+    }
 
-      // Decrement token + meal qty
-      beneficiary.tokenBalance -= 1;
-      meal.qtyAvailable -= 1;
-      await beneficiary.save({ session });
-      await meal.save({ session });
+    // 2) Decrement tokens if >= 1 and role=beneficiary
+    const benUpd = await User.updateOne(
+      { _id: beneficiaryId, role: 'beneficiary', tokenBalance: { $gte: 1 } },
+      { $inc: { tokenBalance: -1 } }
+    );
+    if (benUpd.modifiedCount !== 1) {
+      // roll back meal decrement
+      await Meal.updateOne({ _id: mealId }, { $inc: { qtyAvailable: +1 } });
+      return res.status(400).json({ error: 'Insufficient tokens' });
+    }
 
-      // Create order
-      const order = await Order.create([{
-        mealId: meal._id,
-        beneficiaryId,
-        memberId: meal.memberId,
-        status: 'pending',
-        costTokens: 1
-      }], { session });
-
-      res.status(201).json(order[0]);
+    // 3) Read the meal (to get memberId) and create order
+    const meal = await Meal.findById(mealId).lean();
+    const order = await Order.create({
+      mealId,
+      beneficiaryId,
+      memberId: meal.memberId,
+      status: 'pending',
+      costTokens: 1
     });
+
+    return res.status(201).json(order);
   } catch (e) {
-    await session.abortTransaction();
     return res.status(400).json({ error: e.message });
-  } finally {
-    session.endSession();
   }
 }
 

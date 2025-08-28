@@ -1,0 +1,27 @@
+// API Helper
+
+const BASE = import.meta.env.VITE_API_URL;
+
+async function req(path, { method = 'GET', body } = {}) {
+  const res = await fetch(`${BASE}${path}`, {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',        // send/receive JWT cookie
+    body: body ? JSON.stringify(body) : undefined
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || 'Request failed');
+  return data;
+}
+
+export const api = {
+  register: (p) => req('/auth/register', { method: 'POST', body: p }),
+  login:    (p) => req('/auth/login',    { method: 'POST', body: p }),
+  me:       ()  => req('/auth/me'),
+  logout:   ()  => req('/auth/logout',   { method: 'POST' }),
+  listMeals:()  => req('/meals'),
+  createMeal:(p)=> req('/meals', { method: 'POST', body: p }),
+  listOrders:(role)=> req(`/orders?role=${role}`),
+  placeOrder:(p)=> req('/orders', { method: 'POST', body: p }),
+  acceptOrder:(id)=> req(`/orders/${id}/accept`, { method: 'POST' }),
+};

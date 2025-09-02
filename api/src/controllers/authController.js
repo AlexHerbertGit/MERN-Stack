@@ -58,7 +58,10 @@ async function me(req, res) {
 
 // Logout function, clears session data and removes JWT token.
 async function logout(_req, res) {
-    res.clearCookie,('jwt', { httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production'});
+    res.clearCookie('jwt', { 
+        httpOnly: true, 
+        sameSite: 'lax', 
+        secure: process.env.NODE_ENV === 'production'});
     res.json({ ok: true });
 }
 

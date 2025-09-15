@@ -1,4 +1,7 @@
 // Auth Middleware
+// Verifies the JWT ( from httpOnly cookie or Bearer header).
+// On success, attaches 'req.user = { id, role, name, email }' and calls next().
+// On failure, returns 401 so the clinet can re-authenticate.
 
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');

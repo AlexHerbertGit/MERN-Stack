@@ -1,3 +1,8 @@
+// Login Page
+// Sends crednetials to /auth/login
+// On success, the API sets a JWT cookie and returns the user profile.
+// Stores the user in context and navigates to the dashboard/home.
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../lib/api';

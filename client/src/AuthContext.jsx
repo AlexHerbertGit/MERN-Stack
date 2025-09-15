@@ -1,4 +1,7 @@
 // Auth Context React File
+// Centralizes current user state for the SPA.
+// On initial load, it calls /auth/me to hydrate the session if a valid JWT cokkie exists.
+// Exposes 'user', 'setUser', 'ready', and 'logout()'.
 
 import { createContext, useContext, useEffect, useState } from 'react';
 import { api } from './lib/api';
@@ -6,8 +9,8 @@ import { api } from './lib/api';
 const AuthCtx = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [ready, setReady] = useState(false);
+  const [user, setUser] = useState(null); // { id, name, email, role, tokenBalance }
+  const [ready, setReady] = useState(false); // app can render gated routes once true
 
   // On first load, try to get the current user from the server (JWT cookie)
   useEffect(() => {

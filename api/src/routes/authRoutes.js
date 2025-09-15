@@ -1,4 +1,6 @@
 //Auth Routes
+// Maps REST endpoints to controller handlers.
+// Uses express-validator to validate inputs before the controller logic runs.
 
 const router = require('express').Router();
 const { body } = require('express-validator');
@@ -7,6 +9,8 @@ const { authRequired } = require('../middleware/auth');
 const { register, login, me, logout } = require('../controllers/authController');
 
 // ROUTES
+
+// POST /api/auth/register
  router.post('/register',
     body('name').isString().isLength({ min: 2 }),
     body('email').isEmail(),
@@ -16,6 +20,7 @@ const { register, login, me, logout } = require('../controllers/authController')
     register
  );
 
+ // POST api/auth/login
  router.post('/login',
     body('email').isEmail(),
     body('password').isLength({ min: 6 }),
@@ -23,7 +28,10 @@ const { register, login, me, logout } = require('../controllers/authController')
     login
  );
 
+ // GET api/auth/me
  router.get('/me', authRequired, me);
+
+ // POST /api/auth/logout
  router.post('/logout', authRequired, logout);
 
  module.exports = router;

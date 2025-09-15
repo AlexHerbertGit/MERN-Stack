@@ -1,4 +1,8 @@
 //User Model
+// Defines how User records are stored in MongoDB via Mongoose.
+// Stores a password *hash* and never the raw password.
+// 'role' is constrainted to 'beneficiary' or 'member'
+// 'tokenBalance' defaults to 0 here, we set the inital token balance of 10 for benficiaries at user registration.
 
 const mongoose = require('mongoose');
 

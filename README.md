@@ -29,6 +29,13 @@ cd api
 npm install
 npm run dev
 
+## Create .env file
+create the .env file in API root directory and add the following with a JWT_SECRET string
+
+PORT=5000
+MONGO_URI=mongodb://127.0.0.1:27017/kobra-kai
+JWT_SECRET=your_jwt_secret_here
+
 ## Install the React Client npm packages
 cd ../client
 npm install

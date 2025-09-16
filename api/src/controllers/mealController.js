@@ -1,5 +1,7 @@
 // Meal Controller
-
+// Allows members to create meal listings and save them to the database.
+// Meal listings are pulled from the database and displayed on the front end interface.
+// Meal listings can be updated by members.
 const Meal = require('../models/Meal');
 
 // For pulling all meal listing for display on the front end UI

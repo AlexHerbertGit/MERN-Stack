@@ -1,3 +1,7 @@
+// Orders React Page
+// Shows the list of pending orders for both beneficiaries and memebers
+// Allows members to accept orders from the list of pending orders.
+
 import { useEffect, useState } from 'react';
 import { api } from '../lib/api';
 import { useAuth } from '../AuthContext';

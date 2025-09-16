@@ -1,5 +1,5 @@
 // Meal Routes
-
+// Wires the endpoints using role-based guards.
 const router = require('express').Router();
 const { body } = require('express-validator');
 const { validate } = require('../middleware/validate');

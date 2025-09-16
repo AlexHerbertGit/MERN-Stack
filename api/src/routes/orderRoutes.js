@@ -1,5 +1,5 @@
 // Order Routes
-
+// Wires the order aendpoints with role based guards.
 const router = require('express').Router();
 const { body } = require('express-validator');
 const { validate } = require('../middleware/validate');

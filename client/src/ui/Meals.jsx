@@ -1,3 +1,7 @@
+// Meals React page
+// Allows beneficiaries to view and order meals with tokens.
+// Allows members to create meals and add them to the list.
+
 import { useEffect, useState } from 'react';
 import { api } from '../lib/api';
 import { useAuth } from '../AuthContext';

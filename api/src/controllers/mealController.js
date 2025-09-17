@@ -20,7 +20,7 @@ async function createMeal(req, res) {
   res.status(201).json(meal);
 }
 
-// (Optional) update/delete for completeness
+// Update/delete for completeness
 async function updateMeal(req, res) {
   const { id } = req.params;
   const meal = await Meal.findOneAndUpdate(

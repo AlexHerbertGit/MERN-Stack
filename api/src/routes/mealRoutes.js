@@ -8,6 +8,7 @@ const { requireRole } = require('../middleware/roles');
 const { listMeals, createMeal, updateMeal } = require('../controllers/mealController');
 
 router.get('/', listMeals);
+
 router.post('/',
   authRequired,
   requireRole('member'),
